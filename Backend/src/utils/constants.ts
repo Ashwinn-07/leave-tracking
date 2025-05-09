@@ -2,7 +2,9 @@ export const ROLES = {
   EMPLOYEE: "employee",
   MANAGER: "manager",
   ADMIN: "admin",
-};
+} as const;
+
+export type ROLES = (typeof ROLES)[keyof typeof ROLES];
 
 export const STATUS_CODES = {
   OK: 200,
@@ -21,8 +23,11 @@ export const MESSAGES = {
     LOGOUT: "Logout successful",
   },
   ERROR: {
+    EMAIL_REQUIRED: "Email is Required",
+    PASSWORD_REQUIRED: "Password is Required",
     INVALID_CREDENTIALS: "Invalid credentials",
     USER_NOT_FOUND: "User not found",
     PASSWORD_MISMATCH: "Password and Confirm Password do not match",
+    JWT_SECRET_MISSING: "JWT secret is not configured",
   },
 };
