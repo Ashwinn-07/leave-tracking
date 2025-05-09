@@ -4,6 +4,7 @@
   "main": "server.ts",
   "scripts": {
     "dev": "nodemon --ext ts --exec ts-node server.ts",
+    "seed": "ts-node-dev --transpile-only src/scripts/seed.ts",
     "start": "ts-node server.ts"
   },
   "keywords": [],

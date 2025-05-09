@@ -1,4 +1,4 @@
 export const TOKENS = {
-  IAuthService: Symbol("IAuthService"),
-  IAuthRepository: Symbol("IAuthRepository"),
+  IAuthService: Symbol.for("IAuthService"),
+  IAuthRepository: Symbol.for("IAuthRepository"),
 };

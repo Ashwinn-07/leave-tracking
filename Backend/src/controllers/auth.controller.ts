@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import { IAuthController } from "./interfaces/IAuthController";
-import { inject, autoInjectable } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 import { IAuthService } from "../services/interfaces/IAuthService";
 import { TOKENS } from "../config/tokens";
 import { STATUS_CODES } from "../utils/constants";
 
-@autoInjectable()
+@injectable()
 export class AuthController implements IAuthController {
   constructor(@inject(TOKENS.IAuthService) private authService: IAuthService) {}
-  async login(req: Request, res: Response): Promise<void> {
+  login = async (req: Request, res: Response): Promise<void> => {
     try {
       const { email, password } = req.body;
       const result = await this.authService.login(email, password);
@@ -28,5 +28,5 @@ export class AuthController implements IAuthController {
         error: error instanceof Error ? error.message : "Login Failed",
       });
     }
-  }
+  };
 }
