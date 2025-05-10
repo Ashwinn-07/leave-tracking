@@ -21,6 +21,9 @@ export const MESSAGES = {
   SUCCESS: {
     LOGIN: "Login successful",
     LOGOUT: "Logout successful",
+    LEAVE_REQUEST_CREATED: "Leave Request Created Successfully",
+    LEAVES_FETCHED: "Leaves Fetched Succefully",
+    LEAVE_STATUS_UPDATED: "Succesfully updated leave status",
   },
   ERROR: {
     EMAIL_REQUIRED: "Email is Required",
@@ -32,5 +35,7 @@ export const MESSAGES = {
     UNAUTHORIZED: "Unauthorized access",
     INVALID_TOKEN: "Invalid or expired token",
     FORBIDDEN: "Forbidden access",
+    CANCEL_NOT_ALLOWED: "Cannot cancel this leave",
+    LEAVES_NOT_FOUND: "No Leaves Found",
   },
 };

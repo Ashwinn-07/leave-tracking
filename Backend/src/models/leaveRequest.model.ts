@@ -1,9 +1,9 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Schema, Types, Document } from "mongoose";
 
 export type LeaveStatus = "pending" | "approved" | "rejected" | "cancelled";
 
-export interface ILeaveRequest {
-  _id?: string;
+export interface ILeaveRequest extends Document {
+  _id: string;
   userId: Types.ObjectId;
   leaveTypeId: Types.ObjectId;
   startDate: Date;
@@ -15,7 +15,7 @@ export interface ILeaveRequest {
   updatedAt?: Date;
 }
 
-const leaveRequestSchema = new Schema<ILeaveRequest>(
+const leaveRequestSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     leaveTypeId: {

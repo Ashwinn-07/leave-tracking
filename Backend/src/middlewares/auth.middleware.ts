@@ -12,9 +12,10 @@ export const authMiddleware = (allowedRoles: string[]) => {
     try {
       const token = req.cookies["token"];
       if (!token) {
-        return res
+        res
           .status(STATUS_CODES.UNAUTHORIZED)
           .json({ message: MESSAGES.ERROR.UNAUTHORIZED });
+        return;
       }
 
       const payload = jwt.verify(
@@ -23,9 +24,10 @@ export const authMiddleware = (allowedRoles: string[]) => {
       ) as JwtPayload;
 
       if (!allowedRoles.includes(payload.role)) {
-        return res
+        res
           .status(STATUS_CODES.FORBIDDEN)
           .json({ message: MESSAGES.ERROR.FORBIDDEN });
+        return;
       }
 
       (req as any).userId = payload.id;
@@ -35,11 +37,12 @@ export const authMiddleware = (allowedRoles: string[]) => {
     } catch (err: any) {
       const isJwtError =
         err.name === "JsonWebTokenError" || err.name === "TokenExpiredError";
-      return res
+      res
         .status(isJwtError ? STATUS_CODES.UNAUTHORIZED : STATUS_CODES.FORBIDDEN)
         .json({
           message: isJwtError ? MESSAGES.ERROR.INVALID_TOKEN : err.message,
         });
+      return;
     }
   };
 };
