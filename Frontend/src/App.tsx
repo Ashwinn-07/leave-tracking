@@ -1,10 +1,13 @@
 import { BrowserRouter } from "react-router-dom";
 import { AppRoutes } from "./routes/AppRoutes";
 import { Toaster } from "react-hot-toast";
+import AuthGuard from "./components/auth/AuthGuard";
 const App = () => {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <AuthGuard>
+        <AppRoutes />
+      </AuthGuard>
       <Toaster
         position="top-center"
         toastOptions={{

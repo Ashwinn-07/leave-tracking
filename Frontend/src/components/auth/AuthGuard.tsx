@@ -1,0 +1,35 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../stores/authStore";
+
+const AuthGuard = ({ children }: any) => {
+  const { isAuthenticated, authType } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated && authType) {
+      const targetPath = getRedirectPathForRole(authType);
+
+      if (!window.location.pathname.startsWith(targetPath)) {
+        navigate(targetPath);
+      }
+    }
+  }, []);
+
+  const getRedirectPathForRole = (role: any) => {
+    switch (role) {
+      case "employee":
+        return "/employee/dashboard";
+      case "manager":
+        return "/manager/dashboard";
+      case "admin":
+        return "/admin/dashboard";
+      default:
+        return "/login";
+    }
+  };
+
+  return children;
+};
+
+export default AuthGuard;
