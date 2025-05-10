@@ -8,13 +8,14 @@ const AuthGuard = ({ children }: any) => {
 
   useEffect(() => {
     if (isAuthenticated && authType) {
-      const targetPath = getRedirectPathForRole(authType);
+      const basePath = `/${authType}`;
 
-      if (!window.location.pathname.startsWith(targetPath)) {
+      if (!window.location.pathname.startsWith(basePath)) {
+        const targetPath = getRedirectPathForRole(authType);
         navigate(targetPath);
       }
     }
-  }, []);
+  }, [isAuthenticated, authType, navigate]);
 
   const getRedirectPathForRole = (role: any) => {
     switch (role) {

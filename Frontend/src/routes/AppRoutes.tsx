@@ -8,6 +8,11 @@ import NotFound from "../pages/NotFound";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import PublicRoute from "../components/auth/PublicRoute";
 import { useStore } from "../stores/authStore";
+import RequestLeave from "../pages/employee/RequestLeave";
+import MyLeaves from "../pages/employee/MyLeaves";
+import EmployeeLayout from "../layouts/EmployeeLayout";
+import ManagerLayout from "../layouts/ManagerLayout";
+import AdminLayout from "../layouts/AdminLayout";
 
 export const AppRoutes = () => {
   const { isAuthenticated, authType } = useStore();
@@ -38,17 +43,25 @@ export const AppRoutes = () => {
 
       {/* Protected Routes - Employee */}
       <Route element={<ProtectedRoute allowedRoles={["employee"]} />}>
-        <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
+        <Route element={<EmployeeLayout />}>
+          <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
+          <Route path="/employee/request" element={<RequestLeave />} />
+          <Route path="/employee/status" element={<MyLeaves />} />
+        </Route>
       </Route>
 
       {/* Protected Routes - Manager */}
       <Route element={<ProtectedRoute allowedRoles={["manager"]} />}>
-        <Route path="/manager/dashboard" element={<ManagerDashboard />} />
+        <Route element={<ManagerLayout />}>
+          <Route path="/manager/dashboard" element={<ManagerDashboard />} />
+        </Route>
       </Route>
 
       {/* Protected Routes - Admin */}
       <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route element={<AdminLayout />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<NotFound />} />

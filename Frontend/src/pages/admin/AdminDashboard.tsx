@@ -1,9 +1,6 @@
-import AdminSidebar from "../../components/sidebar/AdminSidebar";
-
 const AdminDashboard = () => {
   return (
     <div className="flex h-screen bg-gray-50">
-      <AdminSidebar />
       <main className="flex-1 p-8">
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">
