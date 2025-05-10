@@ -9,6 +9,6 @@ const adminAuth = authMiddleware([ROLES.ADMIN]);
 const leaveTypeController = container.resolve(LeaveTypeController);
 
 adminRoutes.post("/leave-type", adminAuth, leaveTypeController.createType);
-adminRoutes.get("/leave-types", adminAuth, leaveTypeController.listTypes);
+adminRoutes.get("/leave-types", leaveTypeController.listTypes);
 
 export default adminRoutes;
