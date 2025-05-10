@@ -22,5 +22,5 @@ const leaveTypeSchema = new Schema(
   { timestamps: true }
 );
 
-const leaveType = mongoose.model<ILeaveType>("LeaveType", leaveTypeSchema);
-export default leaveType;
+const LeaveType = mongoose.model<ILeaveType>("LeaveType", leaveTypeSchema);
+export default LeaveType;

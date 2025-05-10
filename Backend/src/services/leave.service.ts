@@ -34,6 +34,9 @@ export class LeaveService implements ILeaveService {
       comments: data.comments,
       status: "pending",
     });
+    if (!leave) {
+      throw new Error(MESSAGES.ERROR.CREATE_LEAVE_FAILED);
+    }
     return {
       data: leave,
       message: MESSAGES.SUCCESS.LEAVE_REQUEST_CREATED,

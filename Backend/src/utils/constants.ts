@@ -22,8 +22,10 @@ export const MESSAGES = {
     LOGIN: "Login successful",
     LOGOUT: "Logout successful",
     LEAVE_REQUEST_CREATED: "Leave Request Created Successfully",
+    LEAVE_TYPE_CREATED: "Leave Type Created Successfully",
     LEAVES_FETCHED: "Leaves Fetched Succefully",
     LEAVE_STATUS_UPDATED: "Succesfully updated leave status",
+    LEAVETYPES_FETCHED: "Successfully fetched leave types",
   },
   ERROR: {
     EMAIL_REQUIRED: "Email is Required",
@@ -37,5 +39,8 @@ export const MESSAGES = {
     FORBIDDEN: "Forbidden access",
     CANCEL_NOT_ALLOWED: "Cannot cancel this leave",
     LEAVES_NOT_FOUND: "No Leaves Found",
+    CREATE_LEAVE_FAILED: "Failed to create leave request",
+    CREATE_LEAVETYPE_FAILED: "Failed to create leave type",
+    FETCH_LEAVETYPE_FAILED: "Failed to fetch leave types",
   },
 };
