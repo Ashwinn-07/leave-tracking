@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../stores/authStore";
+import { useStore } from "../../stores/authStore";
 
 const AuthGuard = ({ children }: any) => {
-  const { isAuthenticated, authType } = useAuthStore();
+  const { isAuthenticated, authType } = useStore();
   const navigate = useNavigate();
 
   useEffect(() => {

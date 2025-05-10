@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Clock } from "lucide-react";
-import { useAuthStore } from "../../stores/authStore";
+import { useStore } from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import { showSuccess, showError } from "../../utils/notifications";
 
@@ -9,7 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuthStore();
+  const { login } = useStore();
   const navigate = useNavigate();
 
   const validateEmail = (email: string) => {

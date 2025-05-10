@@ -7,10 +7,10 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import NotFound from "../pages/NotFound";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import PublicRoute from "../components/auth/PublicRoute";
-import { useAuthStore } from "../stores/authStore";
+import { useStore } from "../stores/authStore";
 
 export const AppRoutes = () => {
-  const { isAuthenticated, authType } = useAuthStore();
+  const { isAuthenticated, authType } = useStore();
 
   const getRedirectPath = () => {
     if (isAuthenticated && authType) {

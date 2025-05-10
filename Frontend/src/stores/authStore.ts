@@ -1,30 +1,13 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { authService } from "../services/authService";
-import type { IUser } from "../types/user";
+import { createAuthSlice, type AuthSlice } from "./slices/authSlice";
 
-interface AuthState {
-  user: IUser | null;
-  authType: "employee" | "manager" | "admin" | null;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-}
+export type StoreState = AuthSlice;
 
-export const useAuthStore = create<AuthState>()(
+export const useStore = create<StoreState>()(
   persist(
-    (set) => ({
-      user: null,
-      authType: null,
-      isAuthenticated: false,
-
-      login: async (email, password) => {
-        const { user } = await authService.login({ email, password });
-
-        const authType = user.role;
-
-        sessionStorage.setItem("auth-type", authType);
-        set({ user, authType, isAuthenticated: true });
-      },
+    (...a) => ({
+      ...createAuthSlice(...a),
     }),
     {
       name: "auth-storage",
