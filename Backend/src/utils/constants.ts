@@ -29,5 +29,8 @@ export const MESSAGES = {
     USER_NOT_FOUND: "User not found",
     PASSWORD_MISMATCH: "Password and Confirm Password do not match",
     JWT_SECRET_MISSING: "JWT secret is not configured",
+    UNAUTHORIZED: "Unauthorized access",
+    INVALID_TOKEN: "Invalid or expired token",
+    FORBIDDEN: "Forbidden access",
   },
 };
