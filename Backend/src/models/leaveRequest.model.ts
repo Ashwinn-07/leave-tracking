@@ -5,7 +5,7 @@ export type LeaveStatus = "pending" | "approved" | "rejected" | "cancelled";
 export interface ILeaveRequest extends Document {
   _id: string;
   userId: Types.ObjectId;
-  leaveTypeId: Types.ObjectId;
+  leaveTypeId: Types.ObjectId | { _id: Types.ObjectId; name: string };
   startDate: Date;
   endDate: Date;
   halfDay?: boolean;

@@ -10,6 +10,13 @@ import { useEffect, useState } from "react";
 import { useStore } from "../../stores/authStore";
 import { showError, showSuccess } from "../../utils/notifications";
 import type { ILeaveRequest } from "../../types/leaveRequest";
+import { formatDate } from "../../utils/dateUtil";
+
+interface LeaveRequestsResponse {
+  message: string;
+  data: ILeaveRequest[];
+}
+
 const getStatusIcon = (status: any) => {
   switch (status) {
     case "approved":
@@ -47,9 +54,9 @@ const MyLeaves = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetchRequests();
-        const data = Array.isArray(response) ? response : [];
-        setRequests(data);
+        const response =
+          (await fetchRequests()) as unknown as LeaveRequestsResponse;
+        setRequests(response.data);
       } catch (err: any) {
         console.error(err);
         setError("Failed to load leave requests");
@@ -67,8 +74,9 @@ const MyLeaves = () => {
       setCancellingId(id);
       await cancelRequest(id);
       showSuccess("Leave Request Cancelled Successfully");
-      const updatedRequests = await fetchRequests();
-      setRequests(Array.isArray(updatedRequests) ? updatedRequests : []);
+      const response =
+        (await fetchRequests()) as unknown as LeaveRequestsResponse;
+      setRequests(response.data);
     } catch (error) {
       console.error("Failed to cancel request:", error);
       showError("Failed to cancel request");
@@ -131,16 +139,17 @@ const MyLeaves = () => {
                       <tr key={leave.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">
-                            {leave.leaveType?.name || leave.type}
+                            {leave.leaveTypeId?.name}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center text-sm text-gray-900">
                             <Clock className="h-4 w-4 text-gray-400 mr-1" />
                             <span>
-                              {leave.startDate === leave.endDate
-                                ? leave.startDate
-                                : `${leave.startDate} - ${leave.endDate}`}
+                              {formatDate(leave.startDate)}
+                              {leave.startDate !== leave.endDate && (
+                                <> - {formatDate(leave.endDate)}</>
+                              )}
                             </span>
                           </div>
                         </td>
@@ -165,7 +174,7 @@ const MyLeaves = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           {leave.status === "pending" && (
                             <button
-                              onClick={() => handleCancelRequest(leave.id)}
+                              onClick={() => handleCancelRequest(leave._id)}
                               disabled={cancellingId === leave.id}
                               className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 cursor-pointer"
                             >

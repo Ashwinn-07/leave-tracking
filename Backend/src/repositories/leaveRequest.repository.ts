@@ -13,7 +13,7 @@ export class LeaveRequestRepository
   }
 
   findByUser(userId: string) {
-    return this.model.find({ userId }).exec();
+    return this.model.find({ userId }).populate("leaveTypeId", "name").exec();
   }
 
   async updateStatus(id: string, status: string) {

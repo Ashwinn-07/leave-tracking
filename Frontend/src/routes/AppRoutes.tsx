@@ -13,6 +13,7 @@ import MyLeaves from "../pages/employee/MyLeaves";
 import EmployeeLayout from "../layouts/EmployeeLayout";
 import ManagerLayout from "../layouts/ManagerLayout";
 import AdminLayout from "../layouts/AdminLayout";
+import LeaveTypes from "../pages/admin/LeaveTypes";
 
 export const AppRoutes = () => {
   const { isAuthenticated, authType } = useStore();
@@ -61,6 +62,7 @@ export const AppRoutes = () => {
       <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/leave-types" element={<LeaveTypes />} />
         </Route>
       </Route>
 

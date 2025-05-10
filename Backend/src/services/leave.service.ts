@@ -5,6 +5,7 @@ import { ILeaveService } from "./interfaces/ILeaveService";
 import { TOKENS } from "../config/tokens";
 import { MESSAGES, STATUS_CODES } from "../utils/constants";
 import { Types } from "mongoose";
+import mongoose from "mongoose";
 
 @injectable()
 export class LeaveService implements ILeaveService {
@@ -23,8 +24,8 @@ export class LeaveService implements ILeaveService {
       comments?: string;
     }
   ): Promise<{ message: string; status: number; data: ILeaveRequest }> {
-    const userObjectId = new Types.ObjectId(userId);
-    const leaveTypeObjectId = new Types.ObjectId(data.leaveTypeId);
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const leaveTypeObjectId = new mongoose.Types.ObjectId(data.leaveTypeId);
     const leave = await this.leaveRepo.create({
       userId: userObjectId,
       leaveTypeId: leaveTypeObjectId,
