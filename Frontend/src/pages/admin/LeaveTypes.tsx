@@ -57,9 +57,12 @@ const LeaveTypes = () => {
         accrualRate: 0,
         halfDayAllowed: false,
       });
-    } catch (error) {
-      console.error("Creation failed:", error);
-      showError("Failed to create leave type");
+    } catch (error: any) {
+      const errMsg =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Failed to create leave type";
+      showError(errMsg);
     }
   };
 

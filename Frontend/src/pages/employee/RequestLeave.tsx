@@ -66,8 +66,12 @@ const RequestLeave = () => {
         halfDay: false,
         comments: "",
       });
-    } catch (err) {
-      showError("Failed to submit leave request");
+    } catch (err: any) {
+      const errMsg =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Failed to submit leave request";
+      showError(errMsg);
     }
   };
 

@@ -4,14 +4,16 @@ import { ILeaveRequestRepository } from "../repositories/interfaces/ILeaveReques
 import { ILeaveService } from "./interfaces/ILeaveService";
 import { TOKENS } from "../config/tokens";
 import { MESSAGES, STATUS_CODES } from "../utils/constants";
-import { Types } from "mongoose";
+import { ILeaveTypeRepository } from "../repositories/interfaces/ILeaveTypeRepository";
 import mongoose from "mongoose";
 
 @injectable()
 export class LeaveService implements ILeaveService {
   constructor(
     @inject(TOKENS.ILeaveRequestRepository)
-    private leaveRepo: ILeaveRequestRepository
+    private leaveRepo: ILeaveRequestRepository,
+    @inject(TOKENS.ILeaveTypeRepository)
+    private leaveTypeRepo: ILeaveTypeRepository
   ) {}
 
   async requestLeave(
@@ -24,8 +26,66 @@ export class LeaveService implements ILeaveService {
       comments?: string;
     }
   ): Promise<{ message: string; status: number; data: ILeaveRequest }> {
+    const startDate = new Date(data.startDate);
+    const endDate = new Date(data.endDate);
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      throw new Error(MESSAGES.ERROR.INVALID_DATE_FORMAT);
+    }
+    if (startDate > endDate) {
+      throw new Error(MESSAGES.ERROR.START_AFTER_END_DATE);
+    }
+
+    if (startDate < new Date()) {
+      throw new Error(MESSAGES.ERROR.PAST_DATE_SELECTION);
+    }
+
+    const leaveType = await this.leaveTypeRepo.findById(data.leaveTypeId);
+    if (!leaveType) {
+      throw new Error(MESSAGES.ERROR.LEAVETYPE_NOT_FOUND);
+    }
+
+    if (data.halfDay && !leaveType.halfDayAllowed) {
+      throw new Error(MESSAGES.ERROR.HALFDAY_NOT_ALLOWED);
+    }
+
+    const requestedDays = data.halfDay
+      ? 0.5
+      : Math.ceil(
+          (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+        ) + 1;
+
+    const existingLeaves = await this.leaveRepo.findByUser(userId);
+    const overlapping = existingLeaves.some(
+      (leave) =>
+        startDate <= leave.endDate &&
+        endDate >= leave.startDate &&
+        ["pending", "approved"].includes(leave.status)
+    );
+
+    if (overlapping) {
+      throw new Error(MESSAGES.ERROR.OVERLAPPING_LEAVE);
+    }
+
+    const currentDate = new Date();
+    const monthsElapsed = currentDate.getMonth() + 1;
+    const accruedDays = Math.min(
+      leaveType.accrualRate * monthsElapsed,
+      leaveType.maxDays
+    );
+
+    const currentYear = currentDate.getFullYear();
+    const usedDays = await this.leaveRepo.getUsedDaysByUserAndLeaveType(
+      userId,
+      data.leaveTypeId,
+      currentYear
+    );
+    if (accruedDays - usedDays < requestedDays) {
+      throw new Error(MESSAGES.ERROR.INSUFFICIENT_LEAVE_BALANCE);
+    }
+
     const userObjectId = new mongoose.Types.ObjectId(userId);
     const leaveTypeObjectId = new mongoose.Types.ObjectId(data.leaveTypeId);
+
     const leave = await this.leaveRepo.create({
       userId: userObjectId,
       leaveTypeId: leaveTypeObjectId,
@@ -62,12 +122,20 @@ export class LeaveService implements ILeaveService {
     requestId: string
   ): Promise<{ message: string; status: number }> {
     const leave = await this.leaveRepo.findById(requestId);
-    if (
-      !leave ||
-      leave.userId.toString() !== userId ||
-      leave.status !== "pending"
-    ) {
-      throw new Error(MESSAGES.ERROR.CANCEL_NOT_ALLOWED);
+    if (!leave) {
+      throw new Error(MESSAGES.ERROR.LEAVE_NOT_FOUND);
+    }
+
+    if (leave.userId.toString() !== userId) {
+      throw new Error(MESSAGES.ERROR.UNAUTHORIZED_ACTION);
+    }
+
+    if (leave.status !== "pending") {
+      throw new Error(MESSAGES.ERROR.CANCEL_NON_PENDING);
+    }
+
+    if (new Date(leave.startDate) < new Date()) {
+      throw new Error(MESSAGES.ERROR.CANCEL_STARTED_LEAVE);
     }
     await this.leaveRepo.updateStatus(requestId, "cancelled");
 

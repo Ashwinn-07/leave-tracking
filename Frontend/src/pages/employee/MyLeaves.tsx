@@ -77,9 +77,12 @@ const MyLeaves = () => {
       const response =
         (await fetchRequests()) as unknown as LeaveRequestsResponse;
       setRequests(response.data);
-    } catch (error) {
-      console.error("Failed to cancel request:", error);
-      showError("Failed to cancel request");
+    } catch (error: any) {
+      const errMsg =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Failed to cancel request";
+      showError(errMsg);
     } finally {
       setCancellingId(null);
     }

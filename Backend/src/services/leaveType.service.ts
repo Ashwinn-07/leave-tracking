@@ -19,6 +19,18 @@ export class LeaveTypeService implements ILeaveTypeService {
     accrualRate: number;
     halfDayAllowed?: boolean;
   }): Promise<{ message: string; status: number; data: ILeaveType }> {
+    if (!data.name || data.name.trim().length < 3) {
+      throw new Error(MESSAGES.ERROR.INVALID_LEAVETYPE_NAME);
+    }
+
+    if (typeof data.maxDays !== "number" || data.maxDays <= 0) {
+      throw new Error(MESSAGES.ERROR.INVALID_MAX_DAYS);
+    }
+
+    if (typeof data.accrualRate !== "number" || data.accrualRate <= 0) {
+      throw new Error(MESSAGES.ERROR.INVALID_ACCRUAL_RATE);
+    }
+
     const type = await this.leaveTypeRepo.create(data);
     if (!type) {
       throw new Error(MESSAGES.ERROR.CREATE_LEAVETYPE_FAILED);
