@@ -1,13 +1,10 @@
 import type { StateCreator } from "zustand";
-import type { ILeaveRequest } from "../../types/leaveRequest";
-import { leaveRequestService } from "../../services/leaveRequestService";
 import type { AuthSlice } from "./authSlice";
+import { leaveRequestService } from "../../services/leaveRequestService";
+import type { ILeaveRequest } from "../../types/leaveRequest";
 
 export interface LeaveRequestSlice {
-  requests: ILeaveRequest[];
-  reqLoading: boolean;
-  reqError: string | null;
-  fetchRequests: () => Promise<void>;
+  fetchRequests: () => Promise<ILeaveRequest[]>;
   submitRequest: (data: {
     leaveTypeId: string;
     startDate: string;
@@ -23,26 +20,14 @@ export const createLeaveRequestSlice: StateCreator<
   [],
   [],
   LeaveRequestSlice
-> = (set, get) => ({
-  requests: [],
-  reqLoading: false,
-  reqError: null,
-
+> = (_set, get) => ({
   fetchRequests: async () => {
     const { authType } = get();
     if (authType !== "employee") {
       throw new Error("Only employees may view their leave requests");
     }
 
-    set({ reqLoading: true, reqError: null });
-    try {
-      const requests = await leaveRequestService.list();
-      set({ requests });
-    } catch (err: any) {
-      set({ reqError: err.message });
-    } finally {
-      set({ reqLoading: false });
-    }
+    return await leaveRequestService.list();
   },
 
   submitRequest: async (data) => {
@@ -51,16 +36,7 @@ export const createLeaveRequestSlice: StateCreator<
       throw new Error("Only employees may submit leave requests");
     }
 
-    set({ reqLoading: true, reqError: null });
-    try {
-      await leaveRequestService.request(data);
-      await get().fetchRequests();
-    } catch (err: any) {
-      set({ reqError: err.message });
-      throw err;
-    } finally {
-      set({ reqLoading: false });
-    }
+    await leaveRequestService.request(data);
   },
 
   cancelRequest: async (id) => {
@@ -69,15 +45,6 @@ export const createLeaveRequestSlice: StateCreator<
       throw new Error("Only employees may cancel leave requests");
     }
 
-    set({ reqLoading: true, reqError: null });
-    try {
-      await leaveRequestService.cancel(id);
-      await get().fetchRequests();
-    } catch (err: any) {
-      set({ reqError: err.message });
-      throw err;
-    } finally {
-      set({ reqLoading: false });
-    }
+    await leaveRequestService.cancel(id);
   },
 });

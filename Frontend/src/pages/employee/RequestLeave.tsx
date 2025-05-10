@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar } from "lucide-react";
+import { useStore } from "../../stores/authStore";
+import { showError, showSuccess } from "../../utils/notifications";
+import type { ILeaveType } from "../../types/leaveType";
 
-const leaveTypes = [
-  { id: "1", name: "Annual Leave" },
-  { id: "2", name: "Sick Leave" },
-  { id: "3", name: "Personal Leave" },
-  { id: "4", name: "Maternity Leave" },
-  { id: "5", name: "Paternity Leave" },
-];
+interface LeaveTypesResponse {
+  message: string;
+  data: ILeaveType[];
+}
 
 const RequestLeave = () => {
+  const { fetchTypes, submitRequest } = useStore();
+  const [leaveTypes, setLeaveTypes] = useState<ILeaveType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     leaveType: "",
     startDate: "",
@@ -18,9 +23,52 @@ const RequestLeave = () => {
     comments: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const loadLeaveTypes = async () => {
+      try {
+        setIsLoading(true);
+        const types = (await fetchTypes()) as unknown as LeaveTypesResponse;
+        setLeaveTypes(types.data);
+      } catch (err) {
+        setFetchError("Failed to fetch leave types");
+        showError("Failed to fetch leave types");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadLeaveTypes();
+  }, [fetchTypes]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+
+    if (formData.startDate > formData.endDate) {
+      showError("End date cannot be before start date");
+      return;
+    }
+
+    try {
+      await submitRequest({
+        leaveTypeId: formData.leaveType,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        halfDay: formData.halfDay,
+        comments: formData.comments,
+      });
+
+      showSuccess("Leave request submitted successfully");
+
+      setFormData({
+        leaveType: "",
+        startDate: "",
+        endDate: "",
+        halfDay: false,
+        comments: "",
+      });
+    } catch (err) {
+      showError("Failed to submit leave request");
+    }
   };
 
   return (
@@ -43,13 +91,20 @@ const RequestLeave = () => {
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
+              disabled={isLoading || !!fetchError}
             >
               <option value="">Select a leave type</option>
-              {leaveTypes.map((type) => (
-                <option key={type.id} value={type.id}>
-                  {type.name}
-                </option>
-              ))}
+              {isLoading ? (
+                <option>Loading leave types...</option>
+              ) : fetchError ? (
+                <option>Error loading leave types</option>
+              ) : (
+                leaveTypes.map((type: any) => (
+                  <option key={type.id} value={type.id}>
+                    {type.name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 

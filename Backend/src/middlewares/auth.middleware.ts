@@ -12,6 +12,7 @@ export const authMiddleware = (allowedRoles: string[]) => {
     try {
       const token = req.cookies["token"];
       if (!token) {
+        console.log("No token found in cookies");
         res
           .status(STATUS_CODES.UNAUTHORIZED)
           .json({ message: MESSAGES.ERROR.UNAUTHORIZED });

@@ -2,8 +2,9 @@ import express from "express";
 import cors from "cors";
 import routes from "./routes";
 const app = express();
+import cookieParser from "cookie-parser";
 
-// Middlewares
+app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,

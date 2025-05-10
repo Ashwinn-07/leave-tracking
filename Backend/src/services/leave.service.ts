@@ -48,9 +48,7 @@ export class LeaveService implements ILeaveService {
     userId: string
   ): Promise<{ message: string; status: number; data: ILeaveRequest[] }> {
     const leaves = await this.leaveRepo.findByUser(userId);
-    if (!leaves || leaves.length === 0) {
-      throw new Error(MESSAGES.ERROR.LEAVES_NOT_FOUND);
-    }
+
     return {
       message: MESSAGES.SUCCESS.LEAVES_FETCHED,
       status: STATUS_CODES.OK,
