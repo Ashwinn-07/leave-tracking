@@ -1,57 +1,88 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, Plus, Edit2, Trash2 } from "lucide-react";
+import { useStore } from "../../stores/authStore";
+import { showError, showSuccess } from "../../utils/notifications";
+import { formatDate } from "../../utils/dateUtil";
+import type { IHoliday } from "../../types/holiday";
 
-const existingHolidays = [
-  {
-    id: "1",
-    name: "New Year's Day",
-    date: "2024-01-01",
-  },
-  {
-    id: "2",
-    name: "Independence Day",
-    date: "2024-07-04",
-  },
-  {
-    id: "3",
-    name: "Christmas Day",
-    date: "2024-12-25",
-  },
-];
+interface HolidayResponse {
+  message: string;
+  data: IHoliday[];
+}
 
 const Holidays = () => {
+  const { fetchHolidays, createHoliday, updateHoliday, deleteHoliday } =
+    useStore();
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [holidays, setHolidays] = useState(existingHolidays);
+  const [holidays, setHolidays] = useState<IHoliday[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     date: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const loadHolidays = async () => {
+      try {
+        setLoading(true);
+        const response = (await fetchHolidays()) as unknown as HolidayResponse;
+        setHolidays(response.data);
+      } catch (err) {
+        setError("Failed to load holidays");
+        showError("Failed to load holidays");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadHolidays();
+  }, [fetchHolidays]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) {
-      setHolidays(
-        holidays.map((holiday) =>
-          holiday.id === editingId ? { ...holiday, ...formData } : holiday
-        )
-      );
-      setEditingId(null);
-    } else {
-      setHolidays([...holidays, { id: String(Date.now()), ...formData }]);
+    try {
+      if (editingId) {
+        await updateHoliday(editingId, formData);
+        const response = (await fetchHolidays()) as unknown as HolidayResponse;
+        setHolidays(response.data);
+        showSuccess("Holiday updated successfully");
+      } else {
+        await createHoliday(formData);
+        const response = (await fetchHolidays()) as unknown as HolidayResponse;
+        setHolidays(response.data);
+        showSuccess("Holiday added successfully");
+      }
+      setShowForm(false);
+      setFormData({ name: "", date: "" });
+    } catch (err: any) {
+      const errMsg =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Operation failed";
+      showError(errMsg);
     }
-    setShowForm(false);
-    setFormData({ name: "", date: "" });
   };
 
-  const handleEdit = (holiday: (typeof existingHolidays)[0]) => {
+  const handleEdit = (holiday: IHoliday) => {
     setFormData({ name: holiday.name, date: holiday.date });
-    setEditingId(holiday.id);
+    setEditingId(holiday._id);
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
-    setHolidays(holidays.filter((holiday) => holiday.id !== id));
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteHoliday(id);
+      const response = (await fetchHolidays()) as unknown as HolidayResponse;
+      setHolidays(response.data);
+      showSuccess("Holiday deleted successfully");
+    } catch (err: any) {
+      const errMsg =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Delete failed";
+      showError(errMsg);
+    }
   };
 
   return (
@@ -69,7 +100,7 @@ const Holidays = () => {
                 setFormData({ name: "", date: "" });
                 setShowForm(true);
               }}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
             >
               <Plus className="h-5 w-5 mr-2" />
               Add Holiday
@@ -119,13 +150,13 @@ const Holidays = () => {
                       setEditingId(null);
                       setFormData({ name: "", date: "" });
                     }}
-                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
                   >
                     {editingId ? "Update Holiday" : "Add Holiday"}
                   </button>
@@ -136,55 +167,74 @@ const Holidays = () => {
         )}
 
         <div className="p-6">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Holiday Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {holidays.map((holiday) => (
-                  <tr key={holiday.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {holiday.name}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {holiday.date}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <div className="flex space-x-3">
-                        <button
-                          onClick={() => handleEdit(holiday)}
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          <Edit2 className="h-5 w-5" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(holiday.id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <Trash2 className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </td>
+          {loading ? (
+            <div className="text-center py-4 text-gray-500">
+              Loading holidays...
+            </div>
+          ) : error ? (
+            <div className="text-center py-4 text-red-500">{error}</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Holiday Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {holidays.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={3}
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
+                        No holidays found
+                      </td>
+                    </tr>
+                  ) : (
+                    holidays.map((holiday) => (
+                      <tr key={holiday._id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">
+                            {holiday.name}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {formatDate(holiday.date)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <div className="flex space-x-3">
+                            <button
+                              onClick={() => handleEdit(holiday)}
+                              className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                            >
+                              <Edit2 className="h-5 w-5" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(holiday._id)}
+                              className="text-red-600 hover:text-red-800 cursor-pointer"
+                            >
+                              <Trash2 className="h-5 w-5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>
