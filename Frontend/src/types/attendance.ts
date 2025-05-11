@@ -9,4 +9,8 @@ export interface IAttendance {
   comments?: string;
   createdAt?: string;
   updatedAt?: string;
+  employee?: {
+    _id: string;
+    name: string;
+  };
 }

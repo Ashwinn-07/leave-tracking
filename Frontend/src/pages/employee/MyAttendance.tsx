@@ -66,7 +66,7 @@ const MyAttendance = () => {
     loadAttendance();
   }, [fetchMyAttendance]);
 
-  const latestAttendance = attendanceData[attendanceData.length - 1];
+  const latestAttendance = attendanceData[0];
   const isClockedIn = Boolean(latestAttendance && !latestAttendance.clockOut);
 
   const handleClockInOut = async () => {

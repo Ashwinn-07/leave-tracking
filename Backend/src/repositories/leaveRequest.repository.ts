@@ -14,7 +14,11 @@ export class LeaveRequestRepository
   }
 
   findByUser(userId: string) {
-    return this.model.find({ userId }).populate("leaveTypeId", "name").exec();
+    return this.model
+      .find({ userId })
+      .populate("leaveTypeId", "name")
+      .sort({ createdAt: -1 })
+      .exec();
   }
 
   async updateStatus(id: string, status: string) {

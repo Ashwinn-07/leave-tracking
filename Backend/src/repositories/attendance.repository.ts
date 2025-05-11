@@ -13,11 +13,15 @@ export class AttendanceRepository
   }
 
   findByUser(userId: string) {
-    return this.model.find({ userId }).exec();
+    return this.model.find({ userId }).sort({ createdAt: -1 }).exec();
   }
 
   findPendingEdits() {
-    return this.model.find({ status: "pending" }).exec();
+    return this.model
+      .find({ status: "pending" })
+      .populate("userId", "name")
+      .sort({ createdAt: -1 })
+      .exec();
   }
 
   async updateStatus(

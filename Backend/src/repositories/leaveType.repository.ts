@@ -13,6 +13,6 @@ export class LeaveTypeRepository
   }
 
   findAll() {
-    return this.model.find().exec();
+    return this.model.find().sort({ createdAt: -1 }).exec();
   }
 }

@@ -17,7 +17,7 @@ export const attendanceService = {
   },
 
   listPending: async () => {
-    const response = await managerApi.get("/pending");
+    const response = await managerApi.get("/attendance/pending");
     return response.data;
   },
 
@@ -26,7 +26,7 @@ export const attendanceService = {
     status: "approved" | "rejected";
     comments?: string;
   }) => {
-    const response = await managerApi.post("/approve", params);
+    const response = await managerApi.post("/attendance/approve", params);
     return response.data;
   },
 };

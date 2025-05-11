@@ -8,7 +8,15 @@ const managerRoutes = Router();
 const managerAuth = authMiddleware([ROLES.MANAGER]);
 const attendanceController = container.resolve(AttendanceController);
 
-managerRoutes.get("/pending", managerAuth, attendanceController.getPending);
-managerRoutes.post("/approve", managerAuth, attendanceController.approve);
+managerRoutes.get(
+  "/attendance/pending",
+  managerAuth,
+  attendanceController.getPending
+);
+managerRoutes.post(
+  "/attendance/approve",
+  managerAuth,
+  attendanceController.approve
+);
 
 export default managerRoutes;

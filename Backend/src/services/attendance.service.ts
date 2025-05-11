@@ -67,10 +67,16 @@ export class AttendanceService implements IAttendanceService {
     if (!pendingEdits) {
       throw new Error(MESSAGES.ERROR.PENDING_EDITS_FETCH_FAILED);
     }
+    const formattedData = pendingEdits.map((record) => ({
+      ...record.toObject(),
+      employee: {
+        name: (record.userId as any)?.name || "Unknown Employee",
+      },
+    }));
     return {
       message: MESSAGES.SUCCESS.PENDING_EDITS_FETCHED,
       status: STATUS_CODES.OK,
-      data: pendingEdits,
+      data: formattedData as unknown as IAttendance[],
     };
   }
 

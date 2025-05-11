@@ -4,7 +4,7 @@ export type AttendanceStatus = "pending" | "approved" | "rejected";
 
 export interface IAttendance extends Document {
   _id: string;
-  userId: string;
+  userId: string | { _id: string; name: string };
   clockIn: Date;
   clockOut?: Date;
   status: AttendanceStatus;
