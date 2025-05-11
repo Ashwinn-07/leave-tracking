@@ -2,87 +2,96 @@
 
 ## 📖 Project Overview
 
-This project is a **MERN + TypeScript** application implementing:
+A **MERN + TypeScript** application featuring:
 
-- **Authentication** with role-based access (Employee, Manager, Admin).
-- **Leave Management**: leave types, leave requests, approvals, cancellations.
-- **Attendance Tracking**: clock-in/out, history, manager edits.
-- **Holiday Management**: admin-defined company holidays.
+- Role-based authentication (Employee/Manager/Admin)
+- Leave management system with approvals
+- Employee attendance tracking
+- Company holiday configuration
 
 ## 🛠 Tech Stack
 
-- **Backend**: Node.js, Express, MongoDB, Mongoose, TypeScript
-- **DI & Patterns**: tsyringe (Dependency Injection), Repository-Service-Controller layers
-- **Frontend**: React, TypeScript, Zustand (store slices), React Router
-- **API Clients**: Axios with scoped instances (`authApi`, `employeeApi`, `managerApi`, `adminApi`)
-- **Styling**: Tailwind CSS
-- **Toasts**: react-hot-toast
+**Backend**:
+
+- Node.js | Express | TypeScript
+- MongoDB | Mongoose
+- Repository Pattern Architecture
+- tsyringe (Dependency Injection)
+- Repository-Service-Controller layers
+
+**Frontend**:
+
+- React | TypeScript
+- Zustand (store slices) | React Router
+- Axios (scoped API instances)
+- Tailwind CSS | react-hot-toast
 
 ## ✨ Core Features
 
-1. **Authentication & Authorization**
+### 1. Authentication & Authorization
 
-   - JWT in HTTP-only cookies
-   - Role guards per route
+- JWT in HTTP-only cookies
+- Role-based route protection
+- Session cleanup on logout
 
-2. **Leave Types (Admin)**
+### 2. Leave Management
 
-   - Manage Leave Types
+- **Employees**: Request/view/cancel leaves
+- **Managers**: Approve/reject requests
+- **Admins**: Configure leave types
 
-3. **Leave Requests (Employee)**
+### 3. Attendance Tracking
 
-   - Request, view, cancel
+- Clock-in/out system
+- Attendance history
+- Manager edit approvals
 
-4. **Manager Approvals**
+### 4. Holiday Management
 
-   - List pending leave & attendance edits
-   - Approve or reject
-
-5. **Attendance (Employee & Manager)**
-
-   - Clock-in/out
-   - History and edit approvals
-
-6. **Holiday Management (Admin)**
-
-   - Define company holidays
-
-7. **Logout**
-   - Clear session cookie and client state
+- Admin-defined company holidays
 
 ## 🚀 Local Setup
 
-1. **Clone the repo**
+### 1. Clone Repository
 
-   ```bash
-   git clone https://github.com/Ashwinn-07/leave-tracking.git
-   cd leave-tracking
-   ```
-
-   cd backend
-   npm install
-
-# create .env with:
-
-# MONGODB_URI=<your_mongo_uri>
-
-# JWT_SECRET=<your_jwt_secret>
-
-# PORT=3000
-
-# FRONTEND_URL=http://localhost:5173
-
-npm run dev
-
-cd frontend
+```bash
+git clone https://github.com/Ashwinn-07/leave-tracking.git
+cd leave-tracking
+2. Backend Setup
+bash
+cd backend
 npm install
 
-# create .env with:
-
-# VITE_BACKEND_URL=http://localhost:3000/api
+# Create .env file
+echo "MONGODB_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+PORT=3000
+FRONTEND_URL=http://localhost:5173" > .env
 
 npm run dev
+3. Frontend Setup
+bash
+cd ../frontend
+npm install
 
-# seed demo users
+# Create .env file
+echo "VITE_BACKEND_URL=http://localhost:3000/api" > .env
 
+npm run dev
+4. Seed Demo Data
+bash
+# From backend directory
 npm run seed
+⚙️ Environment Variables
+Backend (.env)
+
+env
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_secure_jwt_secret
+PORT=3000
+FRONTEND_URL=http://localhost:5173
+Frontend (.env)
+
+env
+VITE_BACKEND_URL=http://localhost:3000/api
+```
