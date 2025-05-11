@@ -3,7 +3,7 @@ import { IAuthController } from "./interfaces/IAuthController";
 import { inject, injectable } from "tsyringe";
 import { IAuthService } from "../services/interfaces/IAuthService";
 import { TOKENS } from "../config/tokens";
-import { STATUS_CODES } from "../utils/constants";
+import { MESSAGES, STATUS_CODES } from "../utils/constants";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -28,5 +28,17 @@ export class AuthController implements IAuthController {
         error: error instanceof Error ? error.message : "Login Failed",
       });
     }
+  };
+  logout = async (req: Request, res: Response): Promise<void> => {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+    });
+
+    res.status(STATUS_CODES.OK).json({
+      message: MESSAGES.SUCCESS.LOGOUT,
+    });
   };
 }

@@ -9,10 +9,12 @@ export interface AuthSlice {
   loginLoading: boolean;
   loginError: string | null;
   login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
 }
 
 export const createAuthSlice: StateCreator<AuthSlice, [], [], AuthSlice> = (
-  set
+  set,
+  get
 ) => ({
   user: null,
   authType: null,
@@ -33,6 +35,24 @@ export const createAuthSlice: StateCreator<AuthSlice, [], [], AuthSlice> = (
       throw err;
     } finally {
       set({ loginLoading: false });
+    }
+  },
+  logout: async () => {
+    try {
+      const { authType } = get();
+      if (!authType) throw new Error("No auth type found");
+      await authService.logout();
+
+      sessionStorage.removeItem("auth-type");
+
+      set({
+        user: null,
+        authType: null,
+        isAuthenticated: false,
+      });
+    } catch (error) {
+      console.error("Logout failed", error);
+      throw error;
     }
   },
 });

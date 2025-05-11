@@ -6,5 +6,6 @@ const authRoutes = Router();
 const authController = container.resolve(AuthController);
 
 authRoutes.post("/login", authController.login);
+authRoutes.post("/logout", authController.logout);
 
 export default authRoutes;

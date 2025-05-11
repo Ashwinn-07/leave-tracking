@@ -5,4 +5,8 @@ export const authService = {
     const response = await authApi.post("/login", data);
     return response.data;
   },
+  logout: async () => {
+    const response = await authApi.post("/logout");
+    return response.data;
+  },
 };
