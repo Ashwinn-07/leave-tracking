@@ -82,27 +82,39 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <Clock className="h-12 w-12 text-blue-600" />
+    <div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="hidden lg:flex lg:w-1/2 bg-indigo-600 flex-col justify-center items-center p-12">
+        <div className="max-w-md text-center">
+          <Clock className="h-24 w-24 text-white mx-auto mb-8" />
+          <h1 className="text-4xl font-bold text-white mb-6">TimeTrack</h1>
+          <p className="text-indigo-200 text-xl mb-8">
+            Track your time efficiently and boost your productivity
+          </p>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-          Sign in to TimeTrack
-        </h2>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          <div className="lg:hidden flex justify-center mb-8">
+            <Clock className="h-14 w-14 text-indigo-600" />
+          </div>
+
+          <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center lg:text-left">
+            Welcome back
+          </h2>
+          <p className="text-gray-500 mb-8 text-center lg:text-left">
+            Please sign in to your account
+          </p>
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 mb-1"
               >
                 Email address
               </label>
-              <div className="mt-1">
+              <div className="relative">
                 <input
                   id="email"
                   name="email"
@@ -112,24 +124,27 @@ const Login = () => {
                     setEmail(e.target.value);
                     if (errors.email) setErrors({ ...errors, email: "" });
                   }}
-                  className={`block w-full appearance-none rounded-md border ${
+                  className={`block w-full appearance-none rounded-lg border ${
                     errors.email ? "border-red-300" : "border-gray-300"
-                  } px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500`}
+                  } px-4 py-3 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500`}
+                  placeholder="you@example.com"
                 />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                )}
               </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <div className="mt-1">
+              <div className="flex items-center justify-between mb-1">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Password
+                </label>
+              </div>
+              <div className="relative">
                 <input
                   id="password"
                   name="password"
@@ -139,23 +154,50 @@ const Login = () => {
                     setPassword(e.target.value);
                     if (errors.password) setErrors({ ...errors, password: "" });
                   }}
-                  className={`block w-full appearance-none rounded-md border ${
+                  className={`block w-full appearance-none rounded-lg border ${
                     errors.password ? "border-red-300" : "border-gray-300"
-                  } px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500`}
+                  } px-4 py-3 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500`}
+                  placeholder="••••••••"
                 />
-                {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-                )}
               </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
             </div>
 
             <div>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 cursor-pointer"
+                className="flex w-full justify-center rounded-lg border border-transparent bg-indigo-600 py-3 px-4 text-md font-medium text-white shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-70 transition-colors duration-200 ease-in-out cursor-pointer"
               >
-                {isLoading ? "Signing in..." : "Sign in"}
+                {isLoading ? (
+                  <div className="flex items-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Signing in...
+                  </div>
+                ) : (
+                  "Sign in"
+                )}
               </button>
             </div>
           </form>

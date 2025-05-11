@@ -1,23 +1,36 @@
+import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
-import Landing from "../pages/Landing";
-import Login from "../pages/auth/Login";
-import EmployeeDashboard from "../pages/employee/EmployeeDashboard";
-import ManagerDashboard from "../pages/manager/ManagerDashboard";
-import AdminDashboard from "../pages/admin/AdminDashboard";
-import NotFound from "../pages/NotFound";
-import ProtectedRoute from "../components/auth/ProtectedRoute";
-import PublicRoute from "../components/auth/PublicRoute";
 import { useStore } from "../stores/authStore";
-import RequestLeave from "../pages/employee/RequestLeave";
-import MyLeaves from "../pages/employee/MyLeaves";
+
 import EmployeeLayout from "../layouts/EmployeeLayout";
 import ManagerLayout from "../layouts/ManagerLayout";
 import AdminLayout from "../layouts/AdminLayout";
-import LeaveTypes from "../pages/admin/LeaveTypes";
-import MyAttendance from "../pages/employee/MyAttendance";
-import ApproveLeaves from "../pages/manager/ApproveLeaves";
-import ApproveAttendance from "../pages/manager/ApproveAttendance";
-import Holidays from "../pages/admin/Holidays";
+import NotFound from "../pages/NotFound";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+import PublicRoute from "../components/auth/PublicRoute";
+import LoadingFallback from "../components/LoadingFallback";
+
+import Landing from "../pages/Landing";
+import Login from "../pages/auth/Login";
+
+const EmployeeDashboard = lazy(
+  () => import("../pages/employee/EmployeeDashboard")
+);
+const RequestLeave = lazy(() => import("../pages/employee/RequestLeave"));
+const MyLeaves = lazy(() => import("../pages/employee/MyLeaves"));
+const MyAttendance = lazy(() => import("../pages/employee/MyAttendance"));
+
+const ManagerDashboard = lazy(
+  () => import("../pages/manager/ManagerDashboard")
+);
+const ApproveAttendance = lazy(
+  () => import("../pages/manager/ApproveAttendance")
+);
+const ApproveLeaves = lazy(() => import("../pages/manager/ApproveLeaves"));
+
+const AdminDashboard = lazy(() => import("../pages/admin/AdminDashboard"));
+const LeaveTypes = lazy(() => import("../pages/admin/LeaveTypes"));
+const Holidays = lazy(() => import("../pages/admin/Holidays"));
 
 export const AppRoutes = () => {
   const { isAuthenticated, authType } = useStore();
@@ -49,31 +62,98 @@ export const AppRoutes = () => {
       {/* Protected Routes - Employee */}
       <Route element={<ProtectedRoute allowedRoles={["employee"]} />}>
         <Route element={<EmployeeLayout />}>
-          <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
-          <Route path="/employee/request" element={<RequestLeave />} />
-          <Route path="/employee/status" element={<MyLeaves />} />
-          <Route path="/employee/attendance" element={<MyAttendance />} />
+          <Route
+            path="/employee/dashboard"
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <EmployeeDashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/employee/request"
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <RequestLeave />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/employee/status"
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <MyLeaves />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/employee/attendance"
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <MyAttendance />
+              </Suspense>
+            }
+          />
         </Route>
       </Route>
 
       {/* Protected Routes - Manager */}
       <Route element={<ProtectedRoute allowedRoles={["manager"]} />}>
         <Route element={<ManagerLayout />}>
-          <Route path="/manager/dashboard" element={<ManagerDashboard />} />
+          <Route
+            path="/manager/dashboard"
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <ManagerDashboard />
+              </Suspense>
+            }
+          />
           <Route
             path="/manager/approve-attendance"
-            element={<ApproveAttendance />}
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <ApproveAttendance />
+              </Suspense>
+            }
           />
-          <Route path="/manager/approve-leaves" element={<ApproveLeaves />} />
+          <Route
+            path="/manager/approve-leaves"
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <ApproveLeaves />
+              </Suspense>
+            }
+          />
         </Route>
       </Route>
 
       {/* Protected Routes - Admin */}
       <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
         <Route element={<AdminLayout />}>
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/leave-types" element={<LeaveTypes />} />
-          <Route path="/admin/holidays" element={<Holidays />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <AdminDashboard />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/leave-types"
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <LeaveTypes />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/holidays"
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <Holidays />
+              </Suspense>
+            }
+          />
         </Route>
       </Route>
 

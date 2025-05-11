@@ -7,7 +7,7 @@ const NotFound = () => {
         404 - Page Not Found
       </h1>
       <p className="text-gray-600 mb-8 text-center">
-        The page you are looking for doesn't exist or has been moved.
+        The page you are looking for is under construction.
       </p>
       <Link
         to="/"
