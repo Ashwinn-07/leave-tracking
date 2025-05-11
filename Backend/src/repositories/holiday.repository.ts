@@ -23,4 +23,33 @@ export class HolidayRepository
   async delete(id: string): Promise<void> {
     await this.model.findByIdAndDelete(id).exec();
   }
+
+  async findByDate(date: Date): Promise<IHoliday | null> {
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    return this.model
+      .findOne({
+        date: {
+          $gte: startOfDay,
+          $lt: new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000),
+        },
+      })
+      .exec();
+  }
+
+  async findBetweenDates(start: Date, end: Date): Promise<IHoliday[]> {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    return this.model
+      .find({
+        date: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      })
+      .sort({ date: 1 })
+      .exec();
+  }
 }

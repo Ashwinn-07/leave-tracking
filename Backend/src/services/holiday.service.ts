@@ -10,11 +10,35 @@ export class HolidayService implements IHolidayService {
   constructor(
     @inject(TOKENS.IHolidayRepository) private holidayRepo: IHolidayRepository
   ) {}
+  private async validateHolidayDate(date: Date): Promise<void> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const holidayDate = new Date(date);
+    holidayDate.setHours(0, 0, 0, 0);
+
+    if (holidayDate < today) {
+      throw new Error(MESSAGES.ERROR.PAST_HOLIDAY_DATE);
+    }
+
+    const existing = await this.holidayRepo.findByDate(holidayDate);
+    if (existing) {
+      throw new Error(MESSAGES.ERROR.DUPLICATE_HOLIDAY_DATE);
+    }
+  }
 
   async createHoliday(data: {
     name: string;
     date: Date;
   }): Promise<{ message: string; status: number; data: IHoliday }> {
+    if (!data.name || data.name.trim().length < 3) {
+      throw new Error(MESSAGES.ERROR.INVALID_HOLIDAY_NAME);
+    }
+    if (isNaN(new Date(data.date).getTime())) {
+      throw new Error(MESSAGES.ERROR.INVALID_HOLIDAY_DATE);
+    }
+
+    await this.validateHolidayDate(data.date);
     const holiday = await this.holidayRepo.create(data);
     return {
       message: MESSAGES.SUCCESS.HOLIDAY_CREATE_SUCCESS,
@@ -40,6 +64,15 @@ export class HolidayService implements IHolidayService {
     id: string,
     data: { name?: string; date?: Date }
   ): Promise<{ message: string; status: number; data: IHoliday }> {
+    if (data.name && data.name.trim().length < 3) {
+      throw new Error(MESSAGES.ERROR.INVALID_HOLIDAY_NAME);
+    }
+    if (data.date) {
+      if (isNaN(new Date(data.date).getTime())) {
+        throw new Error(MESSAGES.ERROR.INVALID_HOLIDAY_DATE);
+      }
+      await this.validateHolidayDate(data.date);
+    }
     const updated = await this.holidayRepo.update(id, data);
     if (!updated) throw new Error(MESSAGES.ERROR.HOLIDAY_NOT_FOUND);
     return {

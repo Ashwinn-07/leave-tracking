@@ -6,6 +6,7 @@ import { TOKENS } from "../config/tokens";
 import { MESSAGES, STATUS_CODES } from "../utils/constants";
 import { ILeaveTypeRepository } from "../repositories/interfaces/ILeaveTypeRepository";
 import mongoose from "mongoose";
+import { IHolidayRepository } from "../repositories/interfaces/IHolidayRepository";
 
 @injectable()
 export class LeaveService implements ILeaveService {
@@ -13,8 +14,41 @@ export class LeaveService implements ILeaveService {
     @inject(TOKENS.ILeaveRequestRepository)
     private leaveRepo: ILeaveRequestRepository,
     @inject(TOKENS.ILeaveTypeRepository)
-    private leaveTypeRepo: ILeaveTypeRepository
+    private leaveTypeRepo: ILeaveTypeRepository,
+    @inject(TOKENS.IHolidayRepository)
+    private holidayRepo: IHolidayRepository
   ) {}
+  private async calculateWorkingDays(
+    start: Date,
+    end: Date,
+    halfDay: boolean
+  ): Promise<number> {
+    let count = 0;
+    const current = new Date(start);
+    const endDate = new Date(end);
+
+    const holidays = await this.holidayRepo.findBetweenDates(start, end);
+    const holidayDates = new Set(
+      holidays.map((h) => h.date.toISOString().split("T")[0])
+    );
+
+    while (current <= endDate) {
+      const day = current.getDay();
+      const dateString = current.toISOString().split("T")[0];
+
+      if (day !== 0 && day !== 6 && !holidayDates.has(dateString)) {
+        count++;
+      }
+
+      current.setDate(current.getDate() + 1);
+    }
+
+    if (halfDay) {
+      return count > 0 ? 0.5 : 0;
+    }
+
+    return count;
+  }
 
   async requestLeave(
     userId: string,
@@ -81,6 +115,15 @@ export class LeaveService implements ILeaveService {
     );
     if (accruedDays - usedDays < requestedDays) {
       throw new Error(MESSAGES.ERROR.INSUFFICIENT_LEAVE_BALANCE);
+    }
+    const days = await this.calculateWorkingDays(
+      startDate,
+      endDate,
+      data.halfDay || false
+    );
+
+    if (days <= 0) {
+      throw new Error(MESSAGES.ERROR.NO_WORKING_DAYS);
     }
 
     const userObjectId = new mongoose.Types.ObjectId(userId);

@@ -76,5 +76,11 @@ export const MESSAGES = {
     ATTENDANCE_FETCH_FAILED: "Attendance Fetch Failed",
     PENDING_EDITS_FETCH_FAILED: "Pending Edits Fetch Failed",
     HOLIDAY_NOT_FOUND: "Holiday not found",
+    PAST_HOLIDAY_DATE: "Cannot create holiday in the past",
+    DUPLICATE_HOLIDAY_DATE: "Holiday already exists for this date",
+    NO_WORKING_DAYS:
+      "Leave period contains no working days (weekends/holidays)",
+    INVALID_HOLIDAY_NAME: "Holiday name must be at least 3 characters",
+    INVALID_HOLIDAY_DATE: "Invalid holiday date",
   },
 };
