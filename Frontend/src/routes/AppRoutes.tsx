@@ -14,6 +14,9 @@ import EmployeeLayout from "../layouts/EmployeeLayout";
 import ManagerLayout from "../layouts/ManagerLayout";
 import AdminLayout from "../layouts/AdminLayout";
 import LeaveTypes from "../pages/admin/LeaveTypes";
+import MyAttendance from "../pages/employee/MyAttendance";
+import ApproveLeaves from "../pages/manager/ApproveLeaves";
+import ApproveAttendance from "../pages/manager/ApproveAttendance";
 
 export const AppRoutes = () => {
   const { isAuthenticated, authType } = useStore();
@@ -48,6 +51,7 @@ export const AppRoutes = () => {
           <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
           <Route path="/employee/request" element={<RequestLeave />} />
           <Route path="/employee/status" element={<MyLeaves />} />
+          <Route path="/employee/attendance" element={<MyAttendance />} />
         </Route>
       </Route>
 
@@ -55,6 +59,11 @@ export const AppRoutes = () => {
       <Route element={<ProtectedRoute allowedRoles={["manager"]} />}>
         <Route element={<ManagerLayout />}>
           <Route path="/manager/dashboard" element={<ManagerDashboard />} />
+          <Route
+            path="/manager/approve-attendance"
+            element={<ApproveAttendance />}
+          />
+          <Route path="/manager/approve-leaves" element={<ApproveLeaves />} />
         </Route>
       </Route>
 
