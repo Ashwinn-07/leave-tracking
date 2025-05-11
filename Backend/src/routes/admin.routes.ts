@@ -14,7 +14,7 @@ adminRoutes.post("/leave-type", adminAuth, leaveTypeController.createType);
 adminRoutes.get("/leave-types", leaveTypeController.listTypes);
 
 adminRoutes.post("/holiday", adminAuth, holidayController.create);
-adminRoutes.get("/holiday", holidayController.list);
+adminRoutes.get("/holidays", holidayController.list);
 adminRoutes.put("/holiday/:id", adminAuth, holidayController.update);
 adminRoutes.delete("/holiday/:id", adminAuth, holidayController.remove);
 

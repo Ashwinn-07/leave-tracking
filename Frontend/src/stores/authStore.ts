@@ -13,11 +13,13 @@ import {
   createAttendanceSlice,
   type AttendanceSlice,
 } from "./slices/attendanceSlice";
+import { createHolidaySlice, type HolidaySlice } from "./slices/holidaySlice";
 
 export type StoreState = AuthSlice &
   LeaveRequestSlice &
   LeaveTypeSlice &
-  AttendanceSlice;
+  AttendanceSlice &
+  HolidaySlice;
 
 export const useStore = create<StoreState>()(
   persist(
@@ -26,6 +28,7 @@ export const useStore = create<StoreState>()(
       ...createLeaveRequestSlice(...a),
       ...createLeaveTypeSlice(...a),
       ...createAttendanceSlice(...a),
+      ...createHolidaySlice(...a),
     }),
     {
       name: "auth-storage",
