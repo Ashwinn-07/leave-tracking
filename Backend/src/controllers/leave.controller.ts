@@ -90,9 +90,9 @@ export class LeaveController implements ILeaveController {
   };
   approve = async (req: Request, res: Response) => {
     try {
-      const { requestId, status, comments } = req.body;
+      const { id, status, comments } = req.body;
       const result = await this.leaveService.updateLeaveStatus(
-        requestId,
+        id,
         status,
         comments
       );

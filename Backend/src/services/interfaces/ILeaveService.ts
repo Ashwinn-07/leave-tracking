@@ -25,7 +25,7 @@ export interface ILeaveService {
     data: ILeaveRequest[];
   }>;
   updateLeaveStatus(
-    requestId: string,
+    id: string,
     status: string,
     comments?: string
   ): Promise<{ message: string; status: number }>;

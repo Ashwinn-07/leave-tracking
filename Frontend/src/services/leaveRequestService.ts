@@ -1,4 +1,4 @@
-import { employeeApi } from "./api";
+import { employeeApi, managerApi } from "./api";
 
 export const leaveRequestService = {
   request: async (data: {
@@ -17,6 +17,18 @@ export const leaveRequestService = {
   },
   cancel: async (requestId: string) => {
     const response = await employeeApi.post("/cancel", { requestId });
+    return response.data;
+  },
+  listPending: async () => {
+    const response = await managerApi.get("/leave/pending");
+    return response.data;
+  },
+  approve: async (params: {
+    id: string;
+    status: "approved" | "rejected";
+    comments?: string;
+  }) => {
+    const response = await managerApi.post("/leave/approve", params);
     return response.data;
   },
 };

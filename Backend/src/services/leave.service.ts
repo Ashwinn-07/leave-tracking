@@ -157,11 +157,11 @@ export class LeaveService implements ILeaveService {
     };
   }
   async updateLeaveStatus(
-    requestId: string,
-    status: string,
+    id: string,
+    status: "approved" | "rejected",
     comments?: string
   ): Promise<{ message: string; status: number }> {
-    await this.leaveRepo.updateLeaveStatus(requestId, status, comments);
+    await this.leaveRepo.updateLeaveStatus(id, status, comments);
     return {
       message: MESSAGES.SUCCESS.STATUS_UPDATE_SUCCESS,
       status: STATUS_CODES.OK,

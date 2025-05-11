@@ -13,6 +13,12 @@ export interface LeaveRequestSlice {
     comments?: string;
   }) => Promise<void>;
   cancelRequest: (id: string) => Promise<void>;
+  listPending: () => Promise<ILeaveRequest[]>;
+  approveLeave: (
+    id: string,
+    status: "approved" | "rejected",
+    comments?: string
+  ) => Promise<void>;
 }
 
 export const createLeaveRequestSlice: StateCreator<
@@ -46,5 +52,20 @@ export const createLeaveRequestSlice: StateCreator<
     }
 
     await leaveRequestService.cancel(id);
+  },
+  listPending: async () => {
+    const { authType } = get();
+    if (authType !== "manager") {
+      throw new Error("Only managers may view pending Leave Requests");
+    }
+    return await leaveRequestService.listPending();
+  },
+
+  approveLeave: async (id, status, comments) => {
+    const { authType } = get();
+    if (authType !== "manager") {
+      throw new Error("Only managers may approve leaves");
+    }
+    return await leaveRequestService.approve({ id, status, comments });
   },
 });

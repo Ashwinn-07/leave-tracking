@@ -25,7 +25,12 @@ export class LeaveRequestRepository
     await this.model.findByIdAndUpdate(id, { status }).exec();
   }
   findByStatus(status: string) {
-    return this.model.find({ status }).sort({ createdAt: -1 }).exec();
+    return this.model
+      .find({ status })
+      .populate("userId", "name")
+      .populate("leaveTypeId", "name")
+      .sort({ createdAt: -1 })
+      .exec();
   }
   async getUsedDaysByUserAndLeaveType(
     userId: string,
