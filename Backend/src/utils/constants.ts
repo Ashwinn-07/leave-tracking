@@ -30,6 +30,7 @@ export const MESSAGES = {
     CLOCK_OUT: "Clocked out Successfully",
     ATTENDANCE_FETCHED: "Attendance Fetched Successfully",
     PENDING_EDITS_FETCHED: "Pending Edits Fetched Successfully",
+    PENDING_LEAVES_FETCHED: "Pending Leaves Fetched Successfully",
     STATUS_UPDATE_SUCCESS: "Status Updated Successfully",
   },
   ERROR: {

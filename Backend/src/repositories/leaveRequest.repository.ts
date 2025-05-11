@@ -24,6 +24,9 @@ export class LeaveRequestRepository
   async updateStatus(id: string, status: string) {
     await this.model.findByIdAndUpdate(id, { status }).exec();
   }
+  findByStatus(status: string) {
+    return this.model.find({ status }).sort({ createdAt: -1 }).exec();
+  }
   async getUsedDaysByUserAndLeaveType(
     userId: string,
     leaveTypeId: string,
@@ -48,5 +51,12 @@ export class LeaveRequestRepository
         Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
       return total + (leave.halfDay ? 0.5 : diffDays);
     }, 0);
+  }
+  async updateLeaveStatus(
+    id: string,
+    status: string,
+    comments?: string
+  ): Promise<void> {
+    await this.model.findByIdAndUpdate(id, { status, comments }).exec();
   }
 }

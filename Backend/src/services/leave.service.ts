@@ -144,4 +144,27 @@ export class LeaveService implements ILeaveService {
       status: STATUS_CODES.OK,
     };
   }
+  async listPendingLeaves(): Promise<{
+    message: string;
+    status: number;
+    data: ILeaveRequest[];
+  }> {
+    const pendingLeaves = await this.leaveRepo.findByStatus("pending");
+    return {
+      message: MESSAGES.SUCCESS.PENDING_LEAVES_FETCHED,
+      status: STATUS_CODES.OK,
+      data: pendingLeaves,
+    };
+  }
+  async updateLeaveStatus(
+    requestId: string,
+    status: string,
+    comments?: string
+  ): Promise<{ message: string; status: number }> {
+    await this.leaveRepo.updateLeaveStatus(requestId, status, comments);
+    return {
+      message: MESSAGES.SUCCESS.STATUS_UPDATE_SUCCESS,
+      status: STATUS_CODES.OK,
+    };
+  }
 }

@@ -71,4 +71,40 @@ export class LeaveController implements ILeaveController {
       });
     }
   };
+  listPending = async (req: Request, res: Response) => {
+    try {
+      const result = await this.leaveService.listPendingLeaves();
+      res.status(result.status).json({
+        message: result.message,
+        data: result.data,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(STATUS_CODES.UNAUTHORIZED).json({
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch pending leave requests",
+      });
+    }
+  };
+  approve = async (req: Request, res: Response) => {
+    try {
+      const { requestId, status, comments } = req.body;
+      const result = await this.leaveService.updateLeaveStatus(
+        requestId,
+        status,
+        comments
+      );
+      res.status(result.status).json({
+        message: result.message,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(STATUS_CODES.UNAUTHORIZED).json({
+        error:
+          error instanceof Error ? error.message : "Failed to update status",
+      });
+    }
+  };
 }

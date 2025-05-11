@@ -19,4 +19,14 @@ export interface ILeaveService {
     userId: string,
     requestId: string
   ): Promise<{ message: string; status: number }>;
+  listPendingLeaves(): Promise<{
+    message: string;
+    status: number;
+    data: ILeaveRequest[];
+  }>;
+  updateLeaveStatus(
+    requestId: string,
+    status: string,
+    comments?: string
+  ): Promise<{ message: string; status: number }>;
 }
