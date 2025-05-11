@@ -17,6 +17,7 @@ import LeaveTypes from "../pages/admin/LeaveTypes";
 import MyAttendance from "../pages/employee/MyAttendance";
 import ApproveLeaves from "../pages/manager/ApproveLeaves";
 import ApproveAttendance from "../pages/manager/ApproveAttendance";
+import Holidays from "../pages/admin/Holidays";
 
 export const AppRoutes = () => {
   const { isAuthenticated, authType } = useStore();
@@ -72,6 +73,7 @@ export const AppRoutes = () => {
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/leave-types" element={<LeaveTypes />} />
+          <Route path="/admin/holidays" element={<Holidays />} />
         </Route>
       </Route>
 
