@@ -95,3 +95,12 @@ Frontend (.env)
 env
 VITE_BACKEND_URL=http://localhost:3000/api
 ```
+
+## ❓ Support & Contact
+
+For questions, issues, or suggestions:  
+📧 ashwinkrishna785@gmail.com
+
+---
+
+**Happy Coding!**
