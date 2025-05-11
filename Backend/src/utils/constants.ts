@@ -32,6 +32,10 @@ export const MESSAGES = {
     PENDING_EDITS_FETCHED: "Pending Edits Fetched Successfully",
     PENDING_LEAVES_FETCHED: "Pending Leaves Fetched Successfully",
     STATUS_UPDATE_SUCCESS: "Status Updated Successfully",
+    HOLIDAY_CREATE_SUCCESS: "Holiday Created Successfully",
+    HOLIDAYS_FETCH_SUCCESS: "Holidays Fetched Successfully",
+    HOLIDAY_UPDATE_SUCCESS: "Holiday Updated Successfully",
+    HOLIDAY_DELETE_SUCCESS: "Holiday Deleted Successfully",
   },
   ERROR: {
     EMAIL_REQUIRED: "Email is Required",
@@ -71,5 +75,6 @@ export const MESSAGES = {
     CLOCK_IN_UNAVAILABLE: "No clock-in found",
     ATTENDANCE_FETCH_FAILED: "Attendance Fetch Failed",
     PENDING_EDITS_FETCH_FAILED: "Pending Edits Fetch Failed",
+    HOLIDAY_NOT_FOUND: "Holiday not found",
   },
 };

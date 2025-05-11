@@ -16,11 +16,16 @@ import { IAttendanceRepository } from "../repositories/interfaces/IAttendanceRep
 import { AttendanceRepository } from "../repositories/attendance.repository";
 import { IAttendanceService } from "../services/interfaces/IAttendanceService";
 import { AttendanceService } from "../services/attendance.service";
+import { IHolidayRepository } from "../repositories/interfaces/IHolidayRepository";
+import { HolidayRepository } from "../repositories/holiday.repository";
+import { IHolidayService } from "../services/interfaces/IHolidayService";
+import { HolidayService } from "../services/holiday.service";
 //controllers
 import { AuthController } from "../controllers/auth.controller";
 import { LeaveController } from "../controllers/leave.controller";
 import { LeaveTypeController } from "../controllers/leaveType.controller";
 import { AttendanceController } from "../controllers/attendance.controller";
+import { HolidayController } from "../controllers/holiday.controller";
 
 container.register<IAuthService>(TOKENS.IAuthService, {
   useClass: AuthService,
@@ -52,6 +57,13 @@ container.register<IAttendanceService>(TOKENS.IAttendanceService, {
 container.register<IAttendanceRepository>(TOKENS.IAttendanceRepository, {
   useClass: AttendanceRepository,
 });
+container.register<IHolidayService>(TOKENS.IHolidayService, {
+  useClass: HolidayService,
+});
+
+container.register<IHolidayRepository>(TOKENS.IHolidayRepository, {
+  useClass: HolidayRepository,
+});
 
 //controllers
 container.register<AuthController>(AuthController, {
@@ -65,4 +77,7 @@ container.register<LeaveTypeController>(LeaveTypeController, {
 });
 container.register<AttendanceController>(AttendanceController, {
   useClass: AttendanceController,
+});
+container.register<HolidayController>(HolidayController, {
+  useClass: HolidayController,
 });
