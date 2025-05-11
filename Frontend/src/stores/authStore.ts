@@ -9,8 +9,15 @@ import {
   createLeaveTypeSlice,
   type LeaveTypeSlice,
 } from "./slices/leaveTypeSlice";
+import {
+  createAttendanceSlice,
+  type AttendanceSlice,
+} from "./slices/attendanceSlice";
 
-export type StoreState = AuthSlice & LeaveRequestSlice & LeaveTypeSlice;
+export type StoreState = AuthSlice &
+  LeaveRequestSlice &
+  LeaveTypeSlice &
+  AttendanceSlice;
 
 export const useStore = create<StoreState>()(
   persist(
@@ -18,6 +25,7 @@ export const useStore = create<StoreState>()(
       ...createAuthSlice(...a),
       ...createLeaveRequestSlice(...a),
       ...createLeaveTypeSlice(...a),
+      ...createAttendanceSlice(...a),
     }),
     {
       name: "auth-storage",
