@@ -26,6 +26,11 @@ export const MESSAGES = {
     LEAVES_FETCHED: "Leaves Fetched Succefully",
     LEAVE_STATUS_UPDATED: "Succesfully updated leave status",
     LEAVETYPES_FETCHED: "Successfully fetched leave types",
+    CLOCK_IN: "Clocked in Successfully",
+    CLOCK_OUT: "Clocked out Successfully",
+    ATTENDANCE_FETCHED: "Attendance Fetched Successfully",
+    PENDING_EDITS_FETCHED: "Pending Edits Fetched Successfully",
+    STATUS_UPDATE_SUCCESS: "Status Updated Successfully",
   },
   ERROR: {
     EMAIL_REQUIRED: "Email is Required",
@@ -62,5 +67,8 @@ export const MESSAGES = {
     INSUFFICIENT_LEAVE_BALANCE: "Insufficient leave balance for this request",
     HALFDAY_NOT_ALLOWED:
       "Half-day requests are not allowed for this leave type",
+    CLOCK_IN_UNAVAILABLE: "No clock-in found",
+    ATTENDANCE_FETCH_FAILED: "Attendance Fetch Failed",
+    PENDING_EDITS_FETCH_FAILED: "Pending Edits Fetch Failed",
   },
 };

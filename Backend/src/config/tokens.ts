@@ -5,4 +5,6 @@ export const TOKENS = {
   ILeaveService: Symbol.for("ILeaveService"),
   ILeaveTypeRepository: Symbol.for("ILeaveTypeRepository"),
   ILeaveTypeService: Symbol.for("ILeaveTypeService"),
+  IAttendanceRepository: Symbol.for("IAttendanceRepository"),
+  IAttendanceService: Symbol.for("IAttendanceService"),
 };

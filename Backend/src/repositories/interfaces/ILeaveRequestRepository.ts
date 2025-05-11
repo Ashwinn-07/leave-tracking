@@ -1,6 +1,8 @@
 import { ILeaveRequest } from "../../models/leaveRequest.model";
+import { IBaseRepository } from "./IBaseRepository";
 
-export interface ILeaveRequestRepository {
+export interface ILeaveRequestRepository
+  extends IBaseRepository<ILeaveRequest> {
   create(data: Partial<ILeaveRequest>): Promise<ILeaveRequest>;
   findByUser(userId: string): Promise<ILeaveRequest[]>;
   findById(id: string): Promise<ILeaveRequest | null>;
