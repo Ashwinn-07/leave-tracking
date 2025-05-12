@@ -7,21 +7,15 @@ import { ROLES } from "../utils/constants";
 
 const managerRoutes = Router();
 const managerAuth = authMiddleware([ROLES.MANAGER]);
+
 const attendanceController = container.resolve(AttendanceController);
 const leaveController = container.resolve(LeaveController);
 
-managerRoutes.get(
-  "/attendance/pending",
-  managerAuth,
-  attendanceController.getPending
-);
-managerRoutes.post(
-  "/attendance/approve",
-  managerAuth,
-  attendanceController.approve
-);
+managerRoutes
+  .get("/attendance/pending", managerAuth, attendanceController.getPending)
+  .post("/attendance/approve", managerAuth, attendanceController.approve)
 
-managerRoutes.get("/leave/pending", managerAuth, leaveController.listPending);
-managerRoutes.post("/leave/approve", managerAuth, leaveController.approve);
+  .get("/leave/pending", managerAuth, leaveController.listPending)
+  .post("/leave/approve", managerAuth, leaveController.approve);
 
 export default managerRoutes;

@@ -7,15 +7,17 @@ import { ROLES } from "../utils/constants";
 
 const employeeRoutes = Router();
 const employeeAuth = authMiddleware([ROLES.EMPLOYEE]);
+
 const leaveController = container.resolve(LeaveController);
 const attendanceController = container.resolve(AttendanceController);
 
-employeeRoutes.post("/request", employeeAuth, leaveController.requestLeave);
-employeeRoutes.get("/status", employeeAuth, leaveController.getMyLeaves);
-employeeRoutes.post("/cancel", employeeAuth, leaveController.cancelLeave);
+employeeRoutes
+  .post("/request", employeeAuth, leaveController.requestLeave)
+  .get("/status", employeeAuth, leaveController.getMyLeaves)
+  .post("/cancel", employeeAuth, leaveController.cancelLeave)
 
-employeeRoutes.post("/clock-in", employeeAuth, attendanceController.clockIn);
-employeeRoutes.post("/clock-out", employeeAuth, attendanceController.clockOut);
-employeeRoutes.get("/my", employeeAuth, attendanceController.getMyAttendance);
+  .post("/clock-in", employeeAuth, attendanceController.clockIn)
+  .post("/clock-out", employeeAuth, attendanceController.clockOut)
+  .get("/my", employeeAuth, attendanceController.getMyAttendance);
 
 export default employeeRoutes;

@@ -7,15 +7,18 @@ import { ROLES } from "../utils/constants";
 
 const adminRoutes = Router();
 const adminAuth = authMiddleware([ROLES.ADMIN]);
+
 const leaveTypeController = container.resolve(LeaveTypeController);
 const holidayController = container.resolve(HolidayController);
 
-adminRoutes.post("/leave-type", adminAuth, leaveTypeController.createType);
-adminRoutes.get("/leave-types", leaveTypeController.listTypes);
+adminRoutes
+  .post("/leave-type", adminAuth, leaveTypeController.createType)
+  .get("/leave-types", leaveTypeController.listTypes);
 
-adminRoutes.post("/holiday", adminAuth, holidayController.create);
-adminRoutes.get("/holidays", holidayController.list);
-adminRoutes.put("/holiday/:id", adminAuth, holidayController.update);
-adminRoutes.delete("/holiday/:id", adminAuth, holidayController.remove);
+adminRoutes
+  .post("/holiday", adminAuth, holidayController.create)
+  .get("/holidays", holidayController.list)
+  .put("/holiday/:id", adminAuth, holidayController.update)
+  .delete("/holiday/:id", adminAuth, holidayController.remove);
 
 export default adminRoutes;
